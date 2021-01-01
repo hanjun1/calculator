@@ -1,7 +1,7 @@
 let displayValue = document.querySelector("#display");
-let valuesStored = [];
+let valuesStored = {};
 let clearDisplay = true;
-let operatorsList = ["add", "subtract", "multiply", "divide"];
+let operatorClicked = false;
 
 function add(num1, num2) {
   return num1 + num2;
@@ -38,6 +38,7 @@ function operate(operator, num1, num2) {
 }
 
 function updateDisplayNumber(e) {
+  operatorClicked = false;
   if (clearDisplay) {
     if (e.target.value == 0) {
       return;
@@ -54,24 +55,28 @@ numbers.forEach((number) => {
   number.addEventListener("click", updateDisplayNumber);
 });
 
-function updateDisplayOperator(e) {
-//   if (operatorsList.includes(valuesStored[1])) {
-//     valuesStored.pop();
-//     valuesStored.push(e.target.value);
-//     return;
-//   }
-  let num1 = parseInt(valuesStored.shift());
-  if (isNaN(num1)) {
-    valuesStored.push(displayValue.textContent);
-  } else {
+function calculate() {
+    let num1 = parseInt(valuesStored['num1']);
     let num2 = parseInt(displayValue.textContent);
-    let operator = valuesStored.pop();
-    let result = operate(operator, num1, num2);
-    displayValue.textContent = result;
-    valuesStored.push(result);
+    let operator = valuesStored['operator'];
+    return operate(operator, num1, num2);
+}
+
+function updateDisplayOperator(e) {
+  if (operatorClicked) {
+    valuesStored['operator'] = e.target.value;
+    return;
   }
-  valuesStored.push(e.target.value);
+  if (!valuesStored.hasOwnProperty('num1')) {
+    valuesStored['num1'] = displayValue.textContent;
+  } else {
+    let result = calculate();
+    displayValue.textContent = result;
+    valuesStored['num1'] = result;
+  }
+  valuesStored['operator'] = e.target.value;
   clearDisplay = true;
+  operatorClicked = true;
 }
 
 let operators = document.querySelectorAll(".operator");
@@ -80,10 +85,7 @@ operators.forEach((operator) => {
 });
 
 function showResult(e) {
-  let num1 = parseInt(valuesStored.shift());
-  let operator = valuesStored.pop();
-  let num2 = parseInt(displayValue.textContent);
-  let result = operate(operator, num1, num2);
+  let result = calculate();
   displayValue.textContent = result;
   clearDisplay = true;
 }
@@ -92,7 +94,7 @@ let equals = document.querySelector("#equals");
 equals.addEventListener("click", showResult);
 
 function clearAllResults(e) {
-  valuesStored = [];
+  valuesStored = {};
   display.textContent = 0;
   clearDisplay = true;
 }
