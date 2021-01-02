@@ -1,7 +1,8 @@
-let displayValue = document.querySelector("#display");
+let displayValue = document.querySelector("#value");
 let valuesStored = {};
 let clearDisplay = true;
 let operatorClicked = false;
+let isIteration = false;
 
 function add(num1, num2) {
   return num1 + num2;
@@ -38,12 +39,16 @@ function operate(operator, num1, num2) {
 }
 
 function updateDisplayNumber(e) {
+  if(isIteration) {
+    valuesStored = {};
+    isIteration = false;
+  }
   operatorClicked = false;
   if (clearDisplay) {
+    displayValue.textContent = e.target.value;
     if (e.target.value == 0) {
       return;
     }
-    displayValue.textContent = e.target.value;
     clearDisplay = false;
   } else {
     displayValue.textContent += e.target.value;
@@ -57,12 +62,16 @@ numbers.forEach((number) => {
 
 function calculate() {
     let num1 = parseInt(valuesStored['num1']);
-    let num2 = parseInt(displayValue.textContent);
+    let num2 = parseInt(valuesStored['num2']);
     let operator = valuesStored['operator'];
     return operate(operator, num1, num2);
 }
 
 function updateDisplayOperator(e) {
+  if (isIteration) {
+    valuesStored['num1'] = displayValue.textContent;
+    isIteration = false;
+  }
   if (operatorClicked) {
     valuesStored['operator'] = e.target.value;
     return;
@@ -70,6 +79,7 @@ function updateDisplayOperator(e) {
   if (!valuesStored.hasOwnProperty('num1')) {
     valuesStored['num1'] = displayValue.textContent;
   } else {
+    valuesStored['num2'] = displayValue.textContent;
     let result = calculate();
     displayValue.textContent = result;
     valuesStored['num1'] = result;
@@ -85,9 +95,18 @@ operators.forEach((operator) => {
 });
 
 function showResult(e) {
+  if (!valuesStored.hasOwnProperty('num1')) {
+    return;
+  }
+  if (!isIteration) {
+    valuesStored['num2'] = displayValue.textContent;
+    isIteration = true;
+  }
   let result = calculate();
   displayValue.textContent = result;
+  valuesStored['num1'] = displayValue.textContent;
   clearDisplay = true;
+  operatorClicked = true;
 }
 
 let equals = document.querySelector("#equals");
@@ -95,7 +114,7 @@ equals.addEventListener("click", showResult);
 
 function clearAllResults(e) {
   valuesStored = {};
-  display.textContent = 0;
+  displayValue.textContent = 0;
   clearDisplay = true;
 }
 
@@ -103,7 +122,7 @@ let clearAll = document.querySelector("#all-clear");
 clearAll.addEventListener("click", clearAllResults);
 
 function clearResult(e) {
-  display.textContent = 0;
+  displayValue.textContent = 0;
   clearDisplay = true;
 }
 

@@ -11,11 +11,15 @@
         "button";
 }
 
-#display {
-    font-size: 50px;
+#display-container {
     align-self: end;
     grid-area: display;
     text-align: right;
+}
+
+
+#value {
+    font-size: 50px;
 }
 
 #button-container {
