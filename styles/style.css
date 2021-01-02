@@ -15,11 +15,22 @@
     align-self: end;
     grid-area: display;
     text-align: right;
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    grid-template-areas:
+        "main-display backspace";
 }
 
+#main-display {
+    grid-area: main-display;
+}
+
+#backspace {
+    grid-area: backspace;
+}
 
 #value {
-    font-size: 50px;
+    font-size: 40px;
 }
 
 #button-container {
@@ -32,7 +43,7 @@
         "seven eight nine subtract"
         "four five six add"
         "one two three equals"
-        "zero zero ... equals";
+        "zero zero decimal equals";
 }
 
 #all-clear {
@@ -101,4 +112,8 @@
 
 #zero {
     grid-area: zero;
+}
+
+#decimal {
+    grid-area: decimal;
 }
