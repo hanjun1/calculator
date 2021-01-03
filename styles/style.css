@@ -1,119 +1,215 @@
-#calculator-container {
-    width: 300px;
-    height: 500px;
-    margin-left: auto;
-    margin-right: auto;
-    display: grid;
-    grid-template-rows: 1fr 3fr;
-    grid-template-columns: repeat(1, 1fr);
-    grid-template-areas:
-        "display"
-        "button";
+/* 
+CSS TABLE OF CONTENTS:
+
+1.0 - GENERAL STYLES
+2.0 - HEADER
+3.0 - CALCULATOR CONTAINER
+    3.1 - DISPLAY CONTAINER
+    3.2 - BUTTON CONTAINER
+4.0 - FOOTER
+*/
+
+/* 1.0 - GENERAL STYLES */
+
+:root {
+  font-family: "Kanit", sans-serif;
 }
 
+button {
+  font-family: "Kanit", sans-serif;
+  font-size: 30px;
+  padding: 0;
+  border: none;
+}
+
+button:focus {
+  outline: 0 !important;
+}
+
+button:hover {
+    transform: scale(1.05);
+    /* border: 1px solid black; */
+    box-shadow: 2px 2px 4px 2px rgb(13, 22, 22);
+}
+
+h1 {
+  text-align: center;
+  font-size: 50px;
+  text-shadow: 1px 2px #292828;
+}
+
+/* 2.0 - HEADER */
+header {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+/* 3.0 - CALCULATOR CONTAINER */
+#calculator-container {
+  width: 400px;
+  height: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: grid;
+  border: 1px solid black;
+  grid-template-rows: repeat(6, 1fr);
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-areas:
+    "display display display display"
+    "button button button button"
+    "button button button button"
+    "button button button button"
+    "button button button button"
+    "button button button button";
+  box-shadow: 5px 10px rgb(73, 73, 73);
+}
+
+.temp-click:active {
+  background: #e5e5e5;
+  -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
+  -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
+  box-shadow: inset 0px 0px 5px #c1c1c1;
+  outline: none;
+}
+
+.operator-click {
+  background: #e5e5e5;
+  -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
+  -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
+  box-shadow: inset 0px 0px 5px #c1c1c1;
+  outline: none;
+}
+
+/* 3.1 - DISPLAY CONTAINER */
 #display-container {
-    align-self: end;
-    grid-area: display;
-    text-align: right;
-    display: grid;
-    grid-template-columns: 3fr 1fr;
-    grid-template-areas:
-        "main-display backspace";
+  grid-area: display;
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  grid-template-rows: 1fr;
+  grid-template-areas: "main-display backspace";
 }
 
 #main-display {
-    grid-area: main-display;
+  grid-area: main-display;
+  text-align: center;
+}
+
+#main-display:before {
+  content: "";
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -0.25em;
 }
 
 #backspace {
-    grid-area: backspace;
+  grid-area: backspace;
 }
 
 #value {
-    font-size: 40px;
+  font-size: 40px;
+  text-align: end;
+
+  display: inline-block;
+  vertical-align: middle;
+  width: 300px;
 }
 
+/* 3.2 - BUTTON CONTAINER */
 #button-container {
-    grid-area: button;
-    display: grid;
-    grid-template-rows: repeat(5, 1fr);
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-areas:
-        "AC C divide multiply"
-        "seven eight nine subtract"
-        "four five six add"
-        "one two three equals"
-        "zero zero decimal equals";
+  display: grid;
+  grid-area: button;
+  grid-template-rows: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-areas:
+    "AC C divide multiply"
+    "seven eight nine subtract"
+    "four five six add"
+    "one two three equals"
+    "zero decimal plus-minus equals";
+}
+
+#plus-minus {
+    grid-area: plus-minus;
 }
 
 #all-clear {
-    grid-area: AC;
+  grid-area: AC;
 }
 
 #clear {
-    grid-area: C;
+  grid-area: C;
 }
 
 #divide {
-    grid-area: divide;
+  grid-area: divide;
 }
 
 #multiply {
-    grid-area: multiply;
+  grid-area: multiply;
 }
 
 #seven {
-    grid-area: seven;
+  grid-area: seven;
 }
 
 #eight {
-    grid-area: eight;
+  grid-area: eight;
 }
 
 #nine {
-    grid-area: nine;
+  grid-area: nine;
 }
 
 #subtract {
-    grid-area: subtract;
+  grid-area: subtract;
 }
 
 #four {
-    grid-area: four;
+  grid-area: four;
 }
 
 #five {
-    grid-area: five;
+  grid-area: five;
 }
 
 #six {
-    grid-area: six;
+  grid-area: six;
 }
 
 #add {
-    grid-area: add;
+  grid-area: add;
 }
 
 #one {
-    grid-area: one;
+  grid-area: one;
 }
 
 #two {
-    grid-area: two;
+  grid-area: two;
 }
 
 #three {
-    grid-area: three;
+  grid-area: three;
 }
 
 #equals {
-    grid-area: equals;
+  grid-area: equals;
 }
 
 #zero {
-    grid-area: zero;
+  grid-area: zero;
 }
 
 #decimal {
-    grid-area: decimal;
+  grid-area: decimal;
+}
+
+/* 4.0 - FOOTER */
+footer {
+  margin-top: 50px;
+  margin-bottom: 50px;
+  text-align: center;
 }

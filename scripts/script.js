@@ -43,13 +43,13 @@ function updateDisplayNumber(e) {
     valuesStored = {};
     isIteration = false;
   }
+  if (exceedsTenDigits() && !clearDisplay) {
+    return;
+  }
   if (e === ".") {
     if (decimalExists()) {
       return;
     }
-  }
-  if (exceedsTenDigits()) {
-    return;
   }
   operatorClicked = false;
   if (clearDisplay && e !== ".") {
@@ -57,10 +57,13 @@ function updateDisplayNumber(e) {
     if (e === "0") {
       return;
     }
+  } else if (clearDisplay && e === ".") {
+    displayValue.textContent = "0."
   } else {
     displayValue.textContent += e;
   }
   clearDisplay = false;
+  
 }
 
 let numbers = document.querySelectorAll(".number");
@@ -72,7 +75,12 @@ function calculate() {
   let num1 = parseFloat(valuesStored["num1"]);
   let num2 = parseFloat(valuesStored["num2"]);
   let operator = valuesStored["operator"];
-  return operate(operator, num1, num2);
+  let result = operate(operator, num1, num2);
+  result = Math.round((result + Number.EPSILON) * 100000000) / 100000000;
+  if (result.toString().length > 8) {
+    return result.toExponential(4);
+  }
+  return result
 }
 
 function updateDisplayOperator(e) {
@@ -89,8 +97,7 @@ function updateDisplayOperator(e) {
   } else {
     valuesStored["num2"] = displayValue.textContent;
     let result = calculate();
-    displayValue.textContent =
-      Math.round((result + Number.EPSILON) * 100000000) / 100000000;
+    displayValue.textContent = result;
     valuesStored["num1"] = result;
   }
   valuesStored["operator"] = e;
@@ -98,12 +105,28 @@ function updateDisplayOperator(e) {
   operatorClicked = true;
 }
 
+function addOperatorClick(e) {
+  clearOperatorClick();
+  e.target.classList.add("operator-click");
+}
+
+function clearOperatorClick() {
+  let operatorClicked = document.querySelector(".operator-click");
+  if (operatorClicked !== null) {
+    operatorClicked.classList.remove("operator-click");
+  }
+}
+
 let operators = document.querySelectorAll(".operator");
 operators.forEach((operator) => {
-  operator.addEventListener("click", (e) => updateDisplayOperator(e.target.value));
+  operator.addEventListener("click", (e) => {
+    addOperatorClick(e);
+    updateDisplayOperator(e.target.value);
+  });
 });
 
 function showResult(e) {
+  clearOperatorClick();
   if (!valuesStored.hasOwnProperty("num1")) {
     return;
   }
@@ -112,8 +135,7 @@ function showResult(e) {
     isIteration = true;
   }
   let result = calculate();
-  displayValue.textContent =
-    Math.round((result + Number.EPSILON) * 100000000) / 100000000;
+  displayValue.textContent = result;
   valuesStored["num1"] = displayValue.textContent;
   clearDisplay = true;
   operatorClicked = true;
@@ -123,6 +145,7 @@ let equals = document.querySelector("#equals");
 equals.addEventListener("click", showResult);
 
 function clearAllResults(e) {
+  clearOperatorClick();
   valuesStored = {};
   displayValue.textContent = 0;
   clearDisplay = true;
@@ -132,6 +155,7 @@ let clearAll = document.querySelector("#all-clear");
 clearAll.addEventListener("click", clearAllResults);
 
 function clearResult(e) {
+  clearOperatorClick();
   displayValue.textContent = 0;
   clearDisplay = true;
 }
@@ -140,6 +164,9 @@ let clear = document.querySelector("#clear");
 clear.addEventListener("click", clearResult);
 
 function removeChar(e) {
+  if (operatorClicked) {
+    return;
+  }
   if (displayValue.textContent === "0") {
     return;
   }
@@ -149,12 +176,26 @@ function removeChar(e) {
     let newDisplayArr = displayValue.textContent.split("");
     newDisplayArr.pop();
     displayValue.textContent = newDisplayArr.join("");
-    clearDisplay = true;
   }
+  clearDisplay = true;
 }
 
 let backspace = document.querySelector("#backspace");
 backspace.addEventListener("click", removeChar);
+
+function addPlusMinus(e) {
+  let displayArr = displayValue.textContent.split("");
+  if (negativeExists()) {
+    displayArr.shift();
+    displayValue.textContent = displayArr.join("");
+  } else {
+    displayArr.unshift("-");
+    displayValue.textContent = displayArr.join("");
+  }
+}
+
+let plusMinus = document.querySelector("#plus-minus");
+plusMinus.addEventListener("click", addPlusMinus);
 
 
 // keyboard compatibility
@@ -209,4 +250,13 @@ function exceedsTenDigits() {
     return true;
   }
   return false;
+}
+
+//check if negative symbol is already in display
+function negativeExists() {
+  let display = displayValue.textContent;
+  if (display.indexOf("-") < 0) {
+    return false;
+  }
+  return true;
 }
